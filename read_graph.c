@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 13:46:55 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/03 15:30:02 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 
 // TODO Move to libft
 #include "ft_file_processor.h"
-
-// TODO REMOVE
-#include <stdio.h>
 
 static int	is_room(const char *line)
 {
@@ -89,7 +86,8 @@ static int	process_line_node(const char *line, void *data)
 			return (-1);
 		}
 		if (rh->awaiting_special != -1)
-			rh->special[rh->awaiting_special] = name;
+			rh->special[rh->awaiting_special] = ft_strdup(name);
+		free(name);
 		rh->awaiting_special = -1;
 		return (0);
 	}
@@ -139,6 +137,22 @@ static int	process_line_edge(const char *line, void *data)
 
 static t_lh g_process_line[3] = {&process_line_node, &process_line_edge, NULL};
 
+/*
+** @deprecated
+*/
+
+void	free_read_helper(void *data)
+{
+	t_read_helper *rh;
+
+	rh = (t_read_helper *)data;
+	free(rh->graph);
+	if (rh->special[0])
+		free(rh->special[0]);
+	if (rh->special[1])
+		free(rh->special[1]);
+}
+
 int	read_graph(int fd, t_graph *graph, int *start, int *end)
 {
 	t_read_helper rh;
@@ -149,10 +163,14 @@ int	read_graph(int fd, t_graph *graph, int *start, int *end)
 	rh.awaiting_special = -1;
 	rh.special[0] = NULL;
 	rh.special[1] = NULL;
-	fp = ft_fp_init(g_process_line, &rh, /*free_read_helper*/NULL);
+	fp = ft_fp_init(g_process_line, &rh, NULL);
 	status = ft_fp_process_fd(fp, fd);
 	free(fp);
 	*start = graph_node_index(graph, rh.special[0]);
 	*end = graph_node_index(graph, rh.special[1]);
-	return (status);
+	free(rh.special[0]);
+	free(rh.special[1]);
+	if (status || *start == -1 || *end == -1)
+		return (-1);
+	return (0);
 }

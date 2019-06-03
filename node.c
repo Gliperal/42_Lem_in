@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:45:37 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 13:17:52 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/03 14:29:32 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_node	*node_new(int id, const char *name)
 	if (!node)
 		return (NULL);
 	node->id = id;
-	node->name = name;
+	node->name = ft_strdup(name);
 	node->dist_to_end = -1;
 	node->degree = 0;
 	node->neighbors = NULL;
@@ -50,6 +50,7 @@ int		node_add_neighbor(t_node *node, int neighbor)
 
 void	node_free(t_node *node)
 {
+	free(node->name);
 	free(node->neighbors);
 	free(node);
 }
