@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 15:30:02 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/03 15:45:32 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,33 @@ typedef struct	s_read_helper
 	char		*special[2];
 }				t_read_helper;
 
-static int	process_line_node(const char *line, void *data)
+static int	process_line_special(const char *line, t_read_helper *rh)
 {
-	t_read_helper *rh;
-	t_node *node;
-	int id;
-	char *name;
-
-	rh = (t_read_helper *)data;
-	if (ft_strequ(line, "##start"))
+	if (ft_strequ(line, "#start"))
 	{
 		if (rh->awaiting_special != -1 || rh->special[0])
 			return (-1);
 		rh->awaiting_special = 0;
 		return (0);
 	}
-	else if (ft_strequ(line, "##end"))
+	else if (ft_strequ(line, "#end"))
 	{
 		if (rh->awaiting_special != -1 || rh->special[1])
 			return (-1);
 		rh->awaiting_special = 1;
 		return (0);
 	}
-	else if (line[0] == '#')
-		return (0);
+	return (0);
+}
+
+static int	process_line_node(const char *line, void *data)
+{
+	t_read_helper	*rh;
+	char			*name;
+
+	rh = (t_read_helper *)data;
+	if (line[0] == '#')
+		return (process_line_special(line + 1, rh));
 	else if (is_room(line))
 	{
 		name = ft_strsub(line, 0, ft_strchr(line, ' ') - line);
@@ -110,11 +113,10 @@ static int	ft_indexof(const char *str, const char c)
 
 static int	process_line_edge(const char *line, void *data)
 {
-	t_read_helper *rh;
-	int status;
-	char *node1;
-	char *node2;
-	int split;
+	t_read_helper	*rh;
+	int				status;
+	char			*node1;
+	int				split;
 
 	rh = (t_read_helper *)data;
 	if (line[0] == '#')
@@ -155,9 +157,9 @@ void	free_read_helper(void *data)
 
 int	read_graph(int fd, t_graph *graph, int *start, int *end)
 {
-	t_read_helper rh;
-	t_file_processor *fp;
-	int status;
+	t_read_helper		rh;
+	t_file_processor	*fp;
+	int					status;
 
 	rh.graph = graph;
 	rh.awaiting_special = -1;

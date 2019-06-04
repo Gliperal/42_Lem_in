@@ -6,16 +6,13 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 13:31:31 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 14:42:28 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/03 15:41:21 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "graph.h"
 #include "libft/libft.h"
-
-// TODO REMOVE
-#include <stdio.h>
 
 t_graph	*graph_new(void)
 {
@@ -32,7 +29,6 @@ t_graph	*graph_new(void)
 
 void	graph_free(t_graph *graph)
 {
-	printf("free graph\n");
 	int i;
 
 	if (graph->nodes)
