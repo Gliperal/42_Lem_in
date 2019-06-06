@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 16:01:25 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/05 19:34:09 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/06 12:45:38 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "graph.h"
 #include "node.h"
 
-void	search(t_graph *graph, t_arrlst *active, t_arrlst *pending, int depth)
+static void	search(t_graph *graph, t_arrlst *active, t_arrlst *pend, int depth)
 {
 	int		i;
 	int		j;
@@ -36,7 +36,7 @@ void	search(t_graph *graph, t_arrlst *active, t_arrlst *pending, int depth)
 			if (neighbor->dist_to_end == -1)
 			{
 				neighbor->dist_to_end = depth;
-				ft_arrlst_add(pending, &neighbor_id);
+				ft_arrlst_add(pend, &neighbor_id);
 			}
 			j++;
 		}
@@ -44,7 +44,7 @@ void	search(t_graph *graph, t_arrlst *active, t_arrlst *pending, int depth)
 	}
 }
 
-void	init_graph(t_graph *graph)
+static void	init_graph(t_graph *graph)
 {
 	int i;
 
@@ -59,7 +59,7 @@ void	init_graph(t_graph *graph)
 	graph->nodes[graph->end]->dist_to_end = 0;
 }
 
-int		pathfind(t_graph *graph)
+int			pathfind(t_graph *graph)
 {
 	t_arrlst	*active;
 	t_arrlst	*pending;
