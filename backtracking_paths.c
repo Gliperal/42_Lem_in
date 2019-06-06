@@ -6,24 +6,13 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 17:43:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/05 20:44:22 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/06 12:20:14 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "graph.h"
 #include "node.h"
 #include "libft/libft.h"
-
-int	ft_arrlst_contains(t_arrlst *list, int elem)
-{
-	return (ft_arrlst_indexof(list, &elem) != -1);
-}
-
-void ft_arrlst_remove_index(t_arrlst *list, int index)
-{
-	if (index == list->size - 1)
-		list->size = list->size - 1;
-}
 
 int complete_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 {
@@ -36,8 +25,8 @@ int complete_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 	i = 0;
 	while (i < node->degree)
 	{
-		if (ft_arrlst_contains(blocked_nodes, node->neighbors[i]) ||
-				ft_arrlst_contains(path, node->neighbors[i])
+		if (ft_arrlst_contains(blocked_nodes, node->neighbors + i) ||
+				ft_arrlst_contains(path, node->neighbors + i)
 		)
 		{
 			i++;
@@ -48,7 +37,7 @@ int complete_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 			return (1);
 		if (complete_path(graph, path, blocked_nodes))
 			return (1);
-		ft_arrlst_remove_index(path, path->size - 1);
+		ft_arrlst_remove_last(path, 1);
 		i++;
 	}
 	return (0);
@@ -90,8 +79,8 @@ int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 		i = neighbor_index(node, *(int *)ft_arrlst_get(path, index + 1)) + 1;
 		while (i < node->degree)
 		{
-			if (ft_arrlst_contains(blocked_nodes, node->neighbors[i]) ||
-					ft_arrlst_contains(path, node->neighbors[i]))
+			if (ft_arrlst_contains(blocked_nodes, node->neighbors + i) ||
+					ft_arrlst_contains(path, node->neighbors + i))
 			{
 				i++;
 				continue ;
@@ -101,7 +90,7 @@ int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 				return (1);
 			i++;
 		}
-		ft_arrlst_remove_index(path, path->size - 1);
+		ft_arrlst_remove_last(path, 1);
 		index--;
 	}
 	return (0);

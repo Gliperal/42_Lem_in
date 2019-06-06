@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 21:12:40 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/05 21:58:14 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/06 12:11:56 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 #include "libft/libft.h"
 
 int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes);
-
-void ft_arrlst_remove_last(t_arrlst *list, int amount)
-{
-	list->size = list->size - amount;
-}
 
 static int	backtrack(t_graph *graph, t_arrlst *paths, t_arrlst *blocked_nodes, int num_paths)
 {
@@ -38,10 +33,10 @@ static int	backtrack(t_graph *graph, t_arrlst *paths, t_arrlst *blocked_nodes, i
 			ft_arrlst_remove_last(paths, 1);
 			return (0);
 		}
-		// add new_path nodes to blocked_nodes (minus start and end)
+		ft_arrlst_add_arrlst(blocked_nodes, new_path, 1, new_path->size - 2);
 		if (backtrack(graph, paths, blocked_nodes, num_paths - 1))
 			return (1);
-		// remove new_path nodes from blocked_nodes
+		ft_arrlst_remove_last(blocked_nodes, new_path->size - 2);
 	}
 }
 
