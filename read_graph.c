@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 15:45:32 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/05 19:55:05 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,24 +155,31 @@ void	free_read_helper(void *data)
 		free(rh->special[1]);
 }
 
-int	read_graph(int fd, t_graph *graph, int *start, int *end)
+t_graph	*read_graph(int fd)
 {
 	t_read_helper		rh;
 	t_file_processor	*fp;
 	int					status;
 
-	rh.graph = graph;
+	rh.graph = graph_new();
+	if (!rh.graph)
+		return (NULL);
 	rh.awaiting_special = -1;
 	rh.special[0] = NULL;
 	rh.special[1] = NULL;
 	fp = ft_fp_init(g_process_line, &rh, NULL);
 	status = ft_fp_process_fd(fp, fd);
 	free(fp);
-	*start = graph_node_index(graph, rh.special[0]);
-	*end = graph_node_index(graph, rh.special[1]);
+	rh.graph->start = graph_node_index(rh.graph, rh.special[0]);
+	rh.graph->end = graph_node_index(rh.graph, rh.special[1]);
+	ft_printf("start %d %s\n", rh.graph->start, rh.special[0]);
+	ft_printf("end %d %s\n", rh.graph->end, rh.special[1]);
 	free(rh.special[0]);
 	free(rh.special[1]);
-	if (status || *start == -1 || *end == -1)
-		return (-1);
-	return (0);
+	if (status || rh.graph->start == -1 || rh.graph->end == -1)
+	{
+		free(rh.graph);
+		return (NULL);
+	}
+	return (rh.graph);
 }

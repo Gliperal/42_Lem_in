@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 13:32:09 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 14:31:31 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/05 19:33:21 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef struct	s_graph
 	t_node		**nodes;
 	int			size;
 	int			free_space;
+	int			start;
+	int			end;
 }				t_graph;
 
 t_graph			*graph_new(void);
