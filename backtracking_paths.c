@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 17:43:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/06 12:35:50 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/07 12:22:39 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,19 @@ int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 		index--;
 	}
 	return (0);
+}
+
+void	paths_del(t_arrlst **paths)
+{
+	int i;
+	t_arrlst **path;
+
+	i = 0;
+	while (i < (*paths)->size)
+	{
+		path = ft_arrlst_get(*paths, i);
+		ft_arrlst_del(path);
+		i++;
+	}
+	ft_arrlst_del(paths);
 }

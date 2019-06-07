@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 16:01:25 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/06 12:45:38 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/07 12:19:25 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,7 @@ int			pathfind(t_graph *graph)
 		pending = tmp;
 		depth++;
 	}
+	ft_arrlst_del(&active);
+	ft_arrlst_del(&pending);
 	return (0);
 }

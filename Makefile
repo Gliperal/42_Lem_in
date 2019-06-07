@@ -6,7 +6,7 @@
 #    By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/28 14:41:02 by nwhitlow          #+#    #+#              #
-#    Updated: 2019/06/06 12:49:50 by nwhitlow         ###   ########.fr        #
+#    Updated: 2019/06/06 15:09:59 by nwhitlow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ libft/libft.a:
 	make -C libft
 
 backtracking_paths.o: graph.h node.h -lft
-graph.o: graph.h node.h -lft
+graph.o: graph.h -lft
 node.o: node.h -lft
 pathfind.o: graph.h node.h -lft
 read_graph.o: graph.h node.h -lft

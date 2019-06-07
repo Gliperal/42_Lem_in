@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 21:12:40 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/06 12:31:17 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/07 12:22:32 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "libft/libft.h"
 
 int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes);
+void		paths_del(t_arrlst **paths);
 
 static int	bt(t_graph *graph, t_arrlst *paths, t_arrlst *used, int num_paths)
 {
@@ -48,7 +49,6 @@ t_arrlst	*create_paths(t_graph *graph, int num_paths)
 	t_arrlst *paths;
 	t_arrlst *blocked_nodes;
 
-	// num_paths can be capped by degree of start and end as well (and number of ants)
 	if (num_paths < 0)
 		return (NULL);
 	paths = ft_arrlst_new(sizeof(t_arrlst *));
@@ -60,7 +60,8 @@ t_arrlst	*create_paths(t_graph *graph, int num_paths)
 		ft_arrlst_del(&paths);
 		return (0);
 	}
-	if (bt(graph, paths, blocked_nodes, num_paths))
-		return (paths);
-	return (NULL);
+	if (!bt(graph, paths, blocked_nodes, num_paths))
+		paths_del(&paths);
+	ft_arrlst_del(&blocked_nodes);
+	return (paths);
 }
