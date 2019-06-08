@@ -2,59 +2,34 @@
 #include <unistd.h>
 #include "graph.h"
 #include "node.h"
+#include "paths.h"
 #include "libft/libft.h"
 
 t_graph	*read_graph(int fd);
 int	pathfind(t_graph *graph);
-int complete_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes);
-int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes);
 t_arrlst	*create_paths(t_graph *graph, int num_paths);
 void		graph_sort_neighbors(t_graph *graph);
-void		paths_del(t_arrlst **paths);
 
-void print_graph(t_graph *graph)
-{
-	printf("Graph\n");
-	for (int i = 0; i < graph->size - graph->free_space; i++)
-	{
-		t_node *node = graph->nodes[i];
-		printf("\tNode [%d, %s] with neighbors [", node->id, node->name);
-		for (int j = 0; j < node->degree; j++)
-		{
-			if (j == 0)
-				printf("%d", node->neighbors[0]);
-			else
-				printf(", %d", node->neighbors[j]);
-		}
-		printf("] and dist %d\n", node->dist_to_end);
-	}
-	printf("\tstart = %d, end = %d\n", graph->start, graph->end);
-}
-
-void print_path(t_arrlst *path, t_graph *graph)
-{
-	printf("Path ");
-	for (int i = 0; i < path->size; i++)
-	{
-		int node = *(int *)ft_arrlst_get(path, i);
-		printf("%s--", graph->nodes[node]->name);
-	}
-	printf("\n");
-}
-
-void print_paths(t_arrlst *paths, t_graph *graph)
-{
-	for (int i = 0; i < paths->size; i++)
-		print_path(*(t_arrlst **)ft_arrlst_get(paths, i), graph);
-}
-
-int	path_len(t_arrlst *paths, int index)
-{
-	t_arrlst *path;
-
-	path = *(t_arrlst **)ft_arrlst_get(paths, index);
-	return (path->size - 1);
-}
+/*
+** void print_graph(t_graph *graph)
+** {
+** 	printf("Graph\n");
+** 	for (int i = 0; i < graph->size - graph->free_space; i++)
+** 	{
+** 		t_node *node = graph->nodes[i];
+** 		printf("\tNode [%d, %s] with neighbors [", node->id, node->name);
+** 		for (int j = 0; j < node->degree; j++)
+** 		{
+** 			if (j == 0)
+** 				printf("%d", node->neighbors[0]);
+** 			else
+** 				printf(", %d", node->neighbors[j]);
+** 		}
+** 		printf("] and dist %d\n", node->dist_to_end);
+** 	}
+** 	printf("\tstart = %d, end = %d\n", graph->start, graph->end);
+** }
+*/
 
 int too_many_paths(t_arrlst *paths, int ants)
 {
@@ -180,60 +155,14 @@ void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
 		ants_per_path[i] = q - path_len(paths, i);
 		if (i < r)
 			ants_per_path[i]++;
-		printf("Sending %d ants down path %d\n", ants_per_path[i], i + 1);
 		i++;
 	}
 	go_ants_go2(graph, paths, ants_per_path);
 	free(ants_per_path);
 }
 
-void do_things(t_graph *graph, int ants)
+t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths)
 {
-/*
-	t_arrlst *path = ft_arrlst_new(sizeof(int));
-	t_arrlst *blocked = ft_arrlst_new(sizeof(int));
-	if (!path || !blocked)
-		return ;
-	int i;
-	i = 0; ft_arrlst_add(path, &i);
-	i = 2; ft_arrlst_add(blocked, &i);
-	i = 3; ft_arrlst_add(blocked, &i);
-	print_path(path, graph);
-	while (1)
-	{
-		int status = next_path(graph, path, blocked);
-		printf("next_path %d\n", status);
-		if (status)
-			print_path(path, graph);
-		else
-			break;
-	}
-	*/
-/*
-	printf("Create_paths\n");
-	t_arrlst *paths = ft_arrlst_new(sizeof(t_arrlst *));
-	if (!paths)
-		return ;
-	t_arrlst *new_path = ft_arrlst_new(sizeof(int));
-	if (!new_path)
-		return ;
-	i = 5; ft_arrlst_add(new_path, &i);
-	i = 6; ft_arrlst_add(new_path, &i);
-	ft_printf("Path:\n");
-	print_path(new_path);
-	ft_printf("return value: %p\n", ft_arrlst_add(paths, &new_path));
-	ft_printf("new_path: %p\n", new_path);
-	ft_printf("paths[0]: %p\n", ft_arrlst_get(paths, 0));
-	ft_printf("*paths[0]: %p\n", *(void **)ft_arrlst_get(paths, 0));
-	ft_printf("Path:\n");
-	print_path(new_path);
-	ft_printf("Paths:\n");
-	print_paths(paths);
-*/
-	int start_degree = graph->nodes[graph->start]->degree;
-	int end_degree = graph->nodes[graph->end]->degree;
-	int max_paths = ft_min(ants, ft_min(start_degree, end_degree));
-	printf("Absolute max paths = %d\n", max_paths);
 	int num_paths = 1;
 	int time;
 	int best_time = -1;
@@ -243,15 +172,12 @@ void do_things(t_graph *graph, int ants)
 		t_arrlst *paths = create_paths(graph, num_paths);
 		if (!paths)
 			break ;
-		print_paths(paths, graph);
 		if (too_many_paths(paths, ants))
 		{
-			printf("Too many paths.\n");
 			paths_del(&paths);
 			break ;
 		}
 		time = time_paths(paths, ants);
-		printf("Time for %d ants to go through: %d\n", ants, time);
 		if (best_time == -1 || time < best_time)
 		{
 			best_time = time;
@@ -261,17 +187,10 @@ void do_things(t_graph *graph, int ants)
 			paths_del(&paths);
 		num_paths++;
 	}
-	if (best_time == -1)
-		printf("Complete failure.\n");
-	else
-	{
-		printf("Best time: %d\n", best_time);
-		go_ants_go(graph, best_paths, ants);
-		paths_del(&best_paths);
-	}
+	return (best_paths);
 }
 
-int	get_num_ants(int fd)
+static int	get_num_ants(int fd)
 {
 	char *line;
 	int status;
@@ -292,36 +211,55 @@ int	get_num_ants(int fd)
 	return (i);
 }
 
+static int lem_in(t_graph *graph, int num_ants)
+{
+	int			start_degree;
+	int			end_degree;
+	int			max_paths;
+	t_arrlst	*paths;
+
+	pathfind(graph);
+	graph_sort_neighbors(graph);
+	start_degree = graph->nodes[graph->start]->degree;
+	end_degree = graph->nodes[graph->end]->degree;
+	max_paths = ft_min(num_ants, ft_min(start_degree, end_degree));
+	paths = find_best_paths(graph, num_ants, max_paths);
+	if (!paths)
+	{
+		graph_free(graph);
+		return (1);
+	}
+	go_ants_go(graph, paths, num_ants);
+	paths_del(&paths);
+	graph_free(graph);
+	return (0);
+}
+
 int main()
 {
 	t_graph	*graph;
 	int		num_ants;
+	int	error;
 
 	num_ants = get_num_ants(0);
+	error = 0;
 	if (num_ants == -1)
+		error = 1;
+	else
+	{
+		graph = read_graph(0);
+		if (!graph)
+			error = 1;
+		else if (num_ants != 0)
+		{
+			write(1, "\n", 1);
+			error = lem_in(graph, num_ants);
+		}
+	}
+	if (error)
 	{
 		write(1, "ERROR\n", 6);
 		return (1);
 	}
-	graph = read_graph(0);
-	write(1, "\n", 1);
-	if (graph)
-	{
-		printf("%d ants\n", num_ants);
-		print_graph(graph);
-
-		pathfind(graph);
-		printf("After pathfinding:\n");
-		print_graph(graph);
-
-		graph_sort_neighbors(graph);
-		printf("After sorting:\n");
-		print_graph(graph);
-
-		do_things(graph, num_ants);
-		graph_free(graph);
-	}
-	else
-		write(1, "ERROR\n", 6);
 	return (0);
 }

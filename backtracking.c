@@ -6,16 +6,16 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 21:12:40 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/07 12:22:32 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 14:42:07 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "graph.h"
 #include "node.h"
+#include "paths.h"
 #include "libft/libft.h"
 
 int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes);
-void		paths_del(t_arrlst **paths);
 
 static int	bt(t_graph *graph, t_arrlst *paths, t_arrlst *used, int num_paths)
 {

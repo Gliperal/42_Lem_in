@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 12:15:26 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 14:53:26 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,8 +176,6 @@ t_graph	*read_graph(int fd)
 	free(fp);
 	rh.graph->start = graph_node_index(rh.graph, rh.special[0]);
 	rh.graph->end = graph_node_index(rh.graph, rh.special[1]);
-	ft_printf("start %d %s\n", rh.graph->start, rh.special[0]);
-	ft_printf("end %d %s\n", rh.graph->end, rh.special[1]);
 	free(rh.special[0]);
 	free(rh.special[1]);
 	if (status || rh.graph->start == -1 || rh.graph->end == -1)
