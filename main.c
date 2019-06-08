@@ -89,6 +89,18 @@ int	time_paths(t_arrlst *paths, int ants)
 		return (x / paths->size);
 }
 
+void	go_ants_go2(t_graph *graph, t_arrlst *paths, int ants, int *ants_per_path)
+{
+	int *ant_locations;
+	int i;
+
+	ant_locations = (int *)malloc(ants * sizeof(int));
+	if (!ant_locations)
+		return ;
+	while (i < paths->size)
+		ant_locations[i] = -1;
+}
+
 void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
 {
 	int *ants_per_path;
@@ -118,7 +130,8 @@ void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
 		printf("Sending %d ants down path %d\n", ants_per_path[i], i + 1);
 		i++;
 	}
-	graph = 0;
+	go_ants_go2(graph, paths, ants, ants_per_path);
+	free(ants_per_path);
 }
 
 void do_things(t_graph *graph, int ants)
