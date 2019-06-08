@@ -89,16 +89,69 @@ int	time_paths(t_arrlst *paths, int ants)
 		return (x / paths->size);
 }
 
-void	go_ants_go2(t_graph *graph, t_arrlst *paths, int ants, int *ants_per_path)
+void	go_ants_go2(t_graph *graph, t_arrlst *paths, int *ants_per_path)
 {
-	int *ant_locations;
+	int **ant_tracker;
 	int i;
 
-	ant_locations = (int *)malloc(ants * sizeof(int));
-	if (!ant_locations)
+	ant_tracker = (int **)malloc(paths->size * sizeof(int *));
+	if (!ant_tracker)
 		return ;
+	i = 0;
 	while (i < paths->size)
-		ant_locations[i] = -1;
+	{
+		t_arrlst *path = *(t_arrlst **)ft_arrlst_get(paths, i);
+		ant_tracker[i] = (int *)malloc(path->size * sizeof(int));
+		if (!ant_tracker[i])
+			return ;
+		ft_bzero(ant_tracker[i], path->size * sizeof(int));
+		ant_tracker[i][0] = ants_per_path[i];
+		i++;
+	}
+	int current_ant = 1;
+	while (1)
+	{
+		int ants_moved = 0;
+		int path_index = 0;
+		while (path_index < paths->size)
+		{
+			t_arrlst *path = *(t_arrlst **)ft_arrlst_get(paths, path_index);
+			i = path->size - 2;
+			while (i > 0)
+			{
+				if (ant_tracker[path_index][i])
+				{
+					if (ants_moved)
+						write(1, " ", 1);
+					else
+						ants_moved = 1;
+					int node_id = *(int *)ft_arrlst_get(path, i + 1);
+					char *room_name = graph->nodes[node_id]->name;
+					ft_printf("L%d-%s", ant_tracker[path_index][i], room_name);
+					ant_tracker[path_index][i + 1] = ant_tracker[path_index][i];
+					ant_tracker[path_index][i] = 0;
+				}
+				i--;
+			}
+			if (ant_tracker[path_index][0])
+			{
+				if (ants_moved)
+					write(1, " ", 1);
+				else
+					ants_moved = 1;
+				int node_id = *(int *)ft_arrlst_get(path, 1);
+				char *room_name = graph->nodes[node_id]->name;
+				ft_printf("L%d-%s", current_ant, room_name);
+				ant_tracker[path_index][1] = current_ant;
+				ant_tracker[path_index][0]--;
+				current_ant++;
+			}
+			path_index++;
+		}
+		if (!ants_moved)
+			break ;
+		write(1, "\n", 1);
+	}
 }
 
 void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
@@ -130,7 +183,7 @@ void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
 		printf("Sending %d ants down path %d\n", ants_per_path[i], i + 1);
 		i++;
 	}
-	go_ants_go2(graph, paths, ants, ants_per_path);
+	go_ants_go2(graph, paths, ants_per_path);
 	free(ants_per_path);
 }
 
@@ -251,6 +304,7 @@ int main()
 		return (1);
 	}
 	graph = read_graph(0);
+	write(1, "\n", 1);
 	if (graph)
 	{
 		printf("%d ants\n", num_ants);

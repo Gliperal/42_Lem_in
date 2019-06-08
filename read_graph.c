@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/05 19:55:05 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 12:15:26 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static int	process_line_special(const char *line, t_read_helper *rh)
 		if (rh->awaiting_special != -1 || rh->special[0])
 			return (-1);
 		rh->awaiting_special = 0;
+		ft_putstr("##start\n");
 		return (0);
 	}
 	else if (ft_strequ(line, "#end"))
@@ -67,6 +68,7 @@ static int	process_line_special(const char *line, t_read_helper *rh)
 		if (rh->awaiting_special != -1 || rh->special[1])
 			return (-1);
 		rh->awaiting_special = 1;
+		ft_putstr("##end\n");
 		return (0);
 	}
 	return (0);
@@ -92,6 +94,7 @@ static int	process_line_node(const char *line, void *data)
 			rh->special[rh->awaiting_special] = ft_strdup(name);
 		free(name);
 		rh->awaiting_special = -1;
+		ft_putendl(line);
 		return (0);
 	}
 	return (-1);
@@ -134,6 +137,7 @@ static int	process_line_edge(const char *line, void *data)
 	free(node1);
 	if (status == -1)
 		return (-1);
+	ft_putendl(line);
 	return (0);
 }
 
