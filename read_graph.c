@@ -6,16 +6,15 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 14:53:26 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 15:31:57 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "read_graph.h"
 #include "graph.h"
 #include "node.h"
 #include "libft/libft.h"
-
-// TODO Move to libft
-#include "ft_file_processor.h"
+#include "libft/ft_file_processor.h"
 
 static int	is_room(const char *line)
 {
@@ -45,13 +44,6 @@ static int	is_room(const char *line)
 		line++;
 	return (!(*line));
 }
-
-typedef struct	s_read_helper
-{
-	t_graph		*graph;
-	int			awaiting_special;
-	char		*special[2];
-}				t_read_helper;
 
 static int	process_line_special(const char *line, t_read_helper *rh)
 {
@@ -100,20 +92,6 @@ static int	process_line_node(const char *line, void *data)
 	return (-1);
 }
 
-static int	ft_indexof(const char *str, const char c)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
 static int	process_line_edge(const char *line, void *data)
 {
 	t_read_helper	*rh;
@@ -129,7 +107,7 @@ static int	process_line_edge(const char *line, void *data)
 		else
 			return (0);
 	}
-	split = ft_indexof(line, '-');
+	split = ft_strchri(line, '-');
 	if (split == -1)
 		return (-1);
 	node1 = ft_strsub(line, 0, split);
@@ -141,25 +119,9 @@ static int	process_line_edge(const char *line, void *data)
 	return (0);
 }
 
-static t_lh g_process_line[3] = {&process_line_node, &process_line_edge, NULL};
+static t_lh	g_process_line[3] = {&process_line_node, &process_line_edge, NULL};
 
-/*
-** @deprecated
-*/
-
-void	free_read_helper(void *data)
-{
-	t_read_helper *rh;
-
-	rh = (t_read_helper *)data;
-	free(rh->graph);
-	if (rh->special[0])
-		free(rh->special[0]);
-	if (rh->special[1])
-		free(rh->special[1]);
-}
-
-t_graph	*read_graph(int fd)
+t_graph		*read_graph(int fd)
 {
 	t_read_helper		rh;
 	t_file_processor	*fp;

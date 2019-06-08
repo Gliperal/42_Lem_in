@@ -6,13 +6,13 @@
 #    By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/28 14:41:02 by nwhitlow          #+#    #+#              #
-#    Updated: 2019/06/08 14:10:56 by nwhitlow         ###   ########.fr        #
+#    Updated: 2019/06/08 15:31:29 by nwhitlow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror
-OBJS=ft_file_processor.o graph.o main.o node.o pathfind.o read_graph.o backtracking_paths.o backtracking.o graph_sort_neighbors.o paths.o
+OBJS=graph.o main.o node.o pathfind.o read_graph.o farm_assistant.o farm_manager.o graph_sort_neighbors.o paths.o
 RM=rm -f
 NAME=lem-in
 
@@ -37,11 +37,11 @@ re: fclean all
 libft/libft.a:
 	make -C libft
 
-backtracking_paths.o: graph.h node.h paths.h -lft
+farm_assistant.o: graph.h node.h paths.h -lft
 graph.o: graph.h -lft
 node.o: node.h -lft
 pathfind.o: graph.h node.h -lft
-read_graph.o: graph.h node.h -lft
-backtracking.o: graph.h node.h -lft
+read_graph.o: read_graph.h graph.h node.h -lft
+farm_manager.o: graph.h node.h -lft
 graph_sort_neighbors.o: graph.h node.h -lft
 paths.o: paths.h graph.h node.h -lft

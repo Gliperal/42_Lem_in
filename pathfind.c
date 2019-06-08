@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 16:01:25 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/07 12:19:25 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 15:14:01 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,19 @@ static void	init_graph(t_graph *graph)
 	graph->nodes[graph->end]->dist_to_end = 0;
 }
 
+static void	swap(t_arrlst **arr1, t_arrlst **arr2)
+{
+	t_arrlst	*tmp;
+
+	tmp = *arr1;
+	*arr1 = *arr2;
+	*arr2 = tmp;
+}
+
 int			pathfind(t_graph *graph)
 {
 	t_arrlst	*active;
 	t_arrlst	*pending;
-	t_arrlst	*tmp;
 	int			depth;
 
 	active = ft_arrlst_new(sizeof(int));
@@ -79,9 +87,7 @@ int			pathfind(t_graph *graph)
 	{
 		ft_arrlst_clear(pending);
 		search(graph, active, pending, depth);
-		tmp = active;
-		active = pending;
-		pending = tmp;
+		swap(&active, &pending);
 		depth++;
 	}
 	ft_arrlst_del(&active);

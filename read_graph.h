@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   paths.h                                            :+:      :+:    :+:   */
+/*   read_graph.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/08 14:03:24 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 14:55:21 by nwhitlow         ###   ########.fr       */
+/*   Created: 2019/06/08 15:30:31 by nwhitlow          #+#    #+#             */
+/*   Updated: 2019/06/08 15:31:12 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PATHS_H
-# define PATHS_H
+#ifndef READ_GRAPH_H
+# define READ_GRAPH_H
 
-# include "graph.h"
-# include "node.h"
-# include "libft/libft.h"
-
-int		path_len(t_arrlst *paths, int index);
-void	print_path(t_arrlst *path, t_graph *graph);
-void	print_paths(t_arrlst *paths, t_graph *graph);
-void	paths_del(t_arrlst **paths);
+typedef struct	s_read_helper
+{
+	t_graph		*graph;
+	int			awaiting_special;
+	char		*special[2];
+}				t_read_helper;
 
 #endif

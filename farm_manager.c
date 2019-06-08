@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   backtracking.c                                     :+:      :+:    :+:   */
+/*   farm_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 21:12:40 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 14:42:07 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 15:10:25 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "libft/libft.h"
 
 int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes);
+int	time_paths(t_arrlst *paths, int ants);
 
 static int	bt(t_graph *graph, t_arrlst *paths, t_arrlst *used, int num_paths)
 {
@@ -64,4 +65,53 @@ t_arrlst	*create_paths(t_graph *graph, int num_paths)
 		paths_del(&paths);
 	ft_arrlst_del(&blocked_nodes);
 	return (paths);
+}
+
+static int	too_many_paths(t_arrlst *paths, int ants)
+{
+	int i;
+	int x;
+
+	i = 0;
+	x = ants;
+	while (i < paths->size - 1)
+	{
+		x += path_len(paths, i);
+		i++;
+	}
+	return (x <= (paths->size - 1) * path_len(paths, paths->size - 1));
+}
+
+t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths)
+{
+	int num_paths;
+	int best_time;
+	int time;
+	t_arrlst *best_paths;
+	t_arrlst *paths;
+
+	best_time = -1;
+	best_paths = NULL;
+	num_paths = 1;
+	while (num_paths <= max_paths)
+	{
+		paths = create_paths(graph, num_paths);
+		if (!paths)
+			break ;
+		if (too_many_paths(paths, ants))
+		{
+			paths_del(&paths);
+			break ;
+		}
+		time = time_paths(paths, ants);
+		if (best_time == -1 || time < best_time)
+		{
+			best_time = time;
+			best_paths = paths;
+		}
+		else
+			paths_del(&paths);
+		num_paths++;
+	}
+	return (best_paths);
 }

@@ -7,7 +7,8 @@
 
 t_graph	*read_graph(int fd);
 int	pathfind(t_graph *graph);
-t_arrlst	*create_paths(t_graph *graph, int num_paths);
+//t_arrlst	*create_paths(t_graph *graph, int num_paths);
+t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths);
 void		graph_sort_neighbors(t_graph *graph);
 
 /*
@@ -30,39 +31,6 @@ void		graph_sort_neighbors(t_graph *graph);
 ** 	printf("\tstart = %d, end = %d\n", graph->start, graph->end);
 ** }
 */
-
-int too_many_paths(t_arrlst *paths, int ants)
-{
-	int i;
-	int x;
-
-	i = 0;
-	x = ants;
-	while (i < paths->size - 1)
-	{
-		x += path_len(paths, i);
-		i++;
-	}
-	return (x <= (paths->size - 1) * path_len(paths, paths->size - 1));
-}
-
-int	time_paths(t_arrlst *paths, int ants)
-{
-	int i;
-	int x;
-
-	i = 0;
-	x = ants;
-	while (i < paths->size)
-	{
-		x += path_len(paths, i) - 1;
-		i++;
-	}
-	if (x % paths->size)
-		return (x / paths->size + 1);
-	else
-		return (x / paths->size);
-}
 
 void	go_ants_go2(t_graph *graph, t_arrlst *paths, int *ants_per_path)
 {
@@ -161,35 +129,6 @@ void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
 	free(ants_per_path);
 }
 
-t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths)
-{
-	int num_paths = 1;
-	int time;
-	int best_time = -1;
-	t_arrlst *best_paths = NULL;
-	while (num_paths <= max_paths)
-	{
-		t_arrlst *paths = create_paths(graph, num_paths);
-		if (!paths)
-			break ;
-		if (too_many_paths(paths, ants))
-		{
-			paths_del(&paths);
-			break ;
-		}
-		time = time_paths(paths, ants);
-		if (best_time == -1 || time < best_time)
-		{
-			best_time = time;
-			best_paths = paths;
-		}
-		else
-			paths_del(&paths);
-		num_paths++;
-	}
-	return (best_paths);
-}
-
 static int	get_num_ants(int fd)
 {
 	char *line;
@@ -211,7 +150,7 @@ static int	get_num_ants(int fd)
 	return (i);
 }
 
-static int lem_in(t_graph *graph, int num_ants)
+static int	lem_in(t_graph *graph, int num_ants)
 {
 	int			start_degree;
 	int			end_degree;
@@ -235,7 +174,7 @@ static int lem_in(t_graph *graph, int num_ants)
 	return (0);
 }
 
-int main()
+int	main(void)
 {
 	t_graph	*graph;
 	int		num_ants;

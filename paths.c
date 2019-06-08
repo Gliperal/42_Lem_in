@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 14:01:33 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 14:11:49 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 15:11:38 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	print_paths(t_arrlst *paths, t_graph *graph)
 
 void	paths_del(t_arrlst **paths)
 {
-	int i;
-	t_arrlst **path;
+	int			i;
+	t_arrlst	**path;
 
 	i = 0;
 	while (i < (*paths)->size)

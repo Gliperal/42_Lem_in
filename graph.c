@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/03 13:31:31 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/03 15:41:21 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 14:57:07 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	graph_free(t_graph *graph)
 	free(graph);
 }
 
-int	graph_add_node(t_graph *graph, const char *name)
+int		graph_add_node(t_graph *graph, const char *name)
 {
 	t_node *node;
 	t_node **tmp;
@@ -73,7 +73,7 @@ int	graph_add_node(t_graph *graph, const char *name)
 	return (0);
 }
 
-int	graph_node_index(t_graph *graph, const char *node_name)
+int		graph_node_index(t_graph *graph, const char *node_name)
 {
 	int i;
 
@@ -89,7 +89,7 @@ int	graph_node_index(t_graph *graph, const char *node_name)
 	return (-1);
 }
 
-int	graph_add_edge(t_graph *graph, const char *node1, const char *node2)
+int		graph_add_edge(t_graph *graph, const char *node1, const char *node2)
 {
 	int n1;
 	int n2;

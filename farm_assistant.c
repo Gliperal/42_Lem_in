@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   backtracking_paths.c                               :+:      :+:    :+:   */
+/*   farm_assistant.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 17:43:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 14:02:49 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 15:10:29 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,24 @@
 #include "node.h"
 #include "paths.h"
 #include "libft/libft.h"
+
+int	time_paths(t_arrlst *paths, int ants)
+{
+	int i;
+	int x;
+
+	i = 0;
+	x = ants;
+	while (i < paths->size)
+	{
+		x += path_len(paths, i) - 1;
+		i++;
+	}
+	if (x % paths->size)
+		return (x / paths->size + 1);
+	else
+		return (x / paths->size);
+}
 
 int	complete_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 {
@@ -87,4 +105,3 @@ int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
 	}
 	return (0);
 }
-
