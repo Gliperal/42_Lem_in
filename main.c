@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 12:53:41 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/09 13:40:57 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/09 14:38:24 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "libft/libft.h"
 #include "main.h"
 
-int		*init_ants_per_path(t_arrlst *paths, int ants)
+static int	*init_ants_per_path(t_arrlst *paths, int ants)
 {
 	int *ants_per_path;
 	int i;
@@ -28,10 +28,7 @@ int		*init_ants_per_path(t_arrlst *paths, int ants)
 	i = 0;
 	x = ants;
 	while (i < paths->size)
-	{
-		x += path_len(paths, i);
-		i++;
-	}
+		x += path_len(paths, i++);
 	q = x / paths->size;
 	r = x % paths->size;
 	ants_per_path = (int *)malloc(paths->size * sizeof(int));
@@ -48,7 +45,7 @@ int		*init_ants_per_path(t_arrlst *paths, int ants)
 	return (ants_per_path);
 }
 
-int		**init_ant_tracker(t_arrlst *paths, int *ants_per_path)
+static int	**init_ant_tracker(t_arrlst *paths, int *ants_per_path)
 {
 	int			**ant_tracker;
 	int			i;
@@ -71,65 +68,62 @@ int		**init_ant_tracker(t_arrlst *paths, int *ants_per_path)
 	return (ant_tracker);
 }
 
-char	*room_name(t_graph *graph, t_arrlst *path, int steps_down_path)
+static void	move_ant(t_graph *graph, t_arrlst *path, int **ants, t_foo *bar)
 {
-	int node_id;
+	int		node_id;
+	char	*room_name;
 
-	node_id = *(int *)ft_arrlst_get(path, steps_down_path);
-	return (graph->nodes[node_id]->name);
+	node_id = *(int *)ft_arrlst_get(path, bar->i + 1);
+	room_name = graph->nodes[node_id]->name;
+	if (ants[bar->path_index][bar->i] == 0)
+		return ;
+	if (bar->ants_moved)
+		write(1, " ", 1);
+	else
+		bar->ants_moved = 1;
+	if (bar->i == 0)
+	{
+		ft_printf("L%d-%s", bar->current_ant, room_name);
+		ants[bar->path_index][1] = bar->current_ant;
+		ants[bar->path_index][0]--;
+		bar->current_ant += 1;
+	}
+	else
+	{
+		ft_printf("L%d-%s", ants[bar->path_index][bar->i], room_name);
+		ants[bar->path_index][bar->i + 1] = ants[bar->path_index][bar->i];
+		ants[bar->path_index][bar->i] = 0;
+	}
 }
 
-void	go_ants_go2(t_graph *graph, t_arrlst *paths, int **ant_tracker)
+static void	go_ants_go2(t_graph *graph, t_arrlst *paths, int **ant_tracker)
 {
-	int			i;
-	int			current_ant;
-	int			ants_moved;
-	int			path_index;
+	t_foo		bar;
 	t_arrlst	*path;
 
-	current_ant = 1;
+	bar.current_ant = 1;
 	while (1)
 	{
-		ants_moved = 0;
-		path_index = 0;
-		while (path_index < paths->size)
+		bar.ants_moved = 0;
+		bar.path_index = 0;
+		while (bar.path_index < paths->size)
 		{
-			path = *(t_arrlst **)ft_arrlst_get(paths, path_index);
-			i = path->size - 2;
-			while (i > 0)
+			path = *(t_arrlst **)ft_arrlst_get(paths, bar.path_index);
+			bar.i = path->size - 2;
+			while (bar.i >= 0)
 			{
-				if (ant_tracker[path_index][i])
-				{
-					if (ants_moved)
-						write(1, " ", 1);
-					else
-						ants_moved = 1;
-					ft_printf("L%d-%s", ant_tracker[path_index][i], room_name(graph, path, i + 1));
-					ant_tracker[path_index][i + 1] = ant_tracker[path_index][i];
-					ant_tracker[path_index][i] = 0;
-				}
-				i--;
+				move_ant(graph, path, ant_tracker, &bar);
+				bar.i--;
 			}
-			if (ant_tracker[path_index][0])
-			{
-				if (ants_moved)
-					write(1, " ", 1);
-				else
-					ants_moved = 1;
-				ft_printf("L%d-%s", current_ant, room_name(graph, path, 1));
-				ant_tracker[path_index][1] = current_ant;
-				ant_tracker[path_index][0]--;
-				current_ant++;
-			}
-			path_index++;
+			bar.path_index++;
 		}
-		if (!ants_moved)
+		if (!bar.ants_moved)
 			break ;
 		write(1, "\n", 1);
 	}
 }
 
-void	free_ant_tracker(int **ant_tracker, int size)
+static void	free_ant_tracker(int **ant_tracker, int size)
 {
 	int i;
 
@@ -142,7 +136,7 @@ void	free_ant_tracker(int **ant_tracker, int size)
 	free(ant_tracker);
 }
 
-void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
+static void	go_ants_go(t_graph *graph, t_arrlst *paths, int ants)
 {
 	int *ants_per_path;
 	int **ant_tracker;
@@ -203,32 +197,29 @@ static int	lem_in(t_graph *graph, int num_ants)
 	return (0);
 }
 
-int	main(void)
+int			main(void)
 {
 	t_graph	*graph;
 	int		num_ants;
-	int		error;
+	int		exit_status;
 
 	num_ants = get_num_ants(0);
-	error = 0;
+	exit_status = 0;
 	if (num_ants == -1)
-		error = 1;
+		exit_status = 1;
 	else
 	{
 		graph = read_graph(0);
 		if (!graph)
-			error = 1;
+			exit_status = 1;
 		else if (num_ants != 0)
 		{
 			write(1, "\n", 1);
-			error = lem_in(graph, num_ants);
+			exit_status = lem_in(graph, num_ants);
 			graph_free(graph);
 		}
 	}
-	if (error)
-	{
+	if (exit_status)
 		write(1, "ERROR\n", 6);
-		return (1);
-	}
-	return (0);
+	return (exit_status);
 }
