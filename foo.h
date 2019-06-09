@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   foo.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/09 13:10:51 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/09 14:49:03 by nwhitlow         ###   ########.fr       */
+/*   Created: 2019/06/09 14:48:40 by nwhitlow          #+#    #+#             */
+/*   Updated: 2019/06/09 14:49:08 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
+#ifndef FOO_H
+# define FOO_H
 
-t_graph			*read_graph(int fd);
-int				pathfind(t_graph *graph);
-void			graph_sort_neighbors(t_graph *graph);
-t_arrlst		*find_best_paths(t_graph *graph, int ants, int max_paths);
-void			go_ants_go(t_graph *graph, t_arrlst *paths, int ants);
+typedef struct	s_foo
+{
+	int			current_ant;
+	int			path_index;
+	int			i;
+	int			ants_moved;
+}				t_foo;
 
 #endif
