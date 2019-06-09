@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 17:43:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 15:10:29 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/08 18:57:41 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,15 @@ int	neighbor_index(t_node *node, int neighbor)
 	return (-1);
 }
 
-int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes)
+int	next_path(t_graph *graph, t_arrlst *path, t_arrlst *blocked_nodes, int *timeout)
 {
 	int index;
 	t_node *node;
 	int i;
 
+	if (*timeout <= 0)
+		return (0);
+	*timeout -= 1;
 	if (*(int *)ft_arrlst_get(path, path->size - 1) != graph->end)
 		return (complete_path(graph, path, blocked_nodes));
 	index = path->size - 2;

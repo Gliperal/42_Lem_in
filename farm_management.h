@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_graph.h                                       :+:      :+:    :+:   */
+/*   farm_management.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/08 15:30:31 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 15:36:59 by nwhitlow         ###   ########.fr       */
+/*   Created: 2019/06/08 18:08:59 by nwhitlow          #+#    #+#             */
+/*   Updated: 2019/06/08 18:22:22 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READ_GRAPH_H
-# define READ_GRAPH_H
+#ifndef FARM_MANAGEMENT_H
+# define FARM_MANAGEMENT_H
 
-# include "graph.h"
+int				next_path(t_graph *graph, t_arrlst *path, t_arrlst *block, int *time);
+int				time_paths(t_arrlst *paths, int ants);
 
-typedef struct	s_read_helper
+typedef struct	s_foo
 {
 	t_graph		*graph;
-	int			awaiting_special;
-	char		*special[2];
-}				t_read_helper;
+	t_arrlst	*paths;
+	t_arrlst	*used_nodes;
+}				t_foo;
 
 #endif

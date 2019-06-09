@@ -6,7 +6,7 @@
 #    By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/28 14:41:02 by nwhitlow          #+#    #+#              #
-#    Updated: 2019/06/08 15:31:29 by nwhitlow         ###   ########.fr        #
+#    Updated: 2019/06/08 18:09:39 by nwhitlow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,6 @@ graph.o: graph.h -lft
 node.o: node.h -lft
 pathfind.o: graph.h node.h -lft
 read_graph.o: read_graph.h graph.h node.h -lft
-farm_manager.o: graph.h node.h -lft
+farm_manager.o: farm_management.h graph.h node.h -lft
 graph_sort_neighbors.o: graph.h node.h -lft
 paths.o: paths.h graph.h node.h -lft
