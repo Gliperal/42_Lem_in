@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 21:12:40 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/09 13:31:43 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/09 14:03:26 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,26 @@ static int	too_many_paths(t_arrlst *paths, int ants)
 	return (x <= (paths->size - 1) * path_len(paths, paths->size - 1));
 }
 
+static void	x(int *best_time, t_arrlst **best_paths, int time, t_arrlst *paths)
+{
+	if (*best_time == -1 || time < *best_time)
+	{
+		if (*best_paths != NULL)
+			paths_del(best_paths);
+		*best_time = time;
+		*best_paths = paths;
+	}
+	else
+		paths_del(&paths);
+}
+
 t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths)
 {
-	int num_paths;
-	int best_time;
-	int time;
-	t_arrlst *best_paths;
-	t_arrlst *paths;
+	int			num_paths;
+	int			best_time;
+	int			time;
+	t_arrlst	*best_paths;
+	t_arrlst	*paths;
 
 	best_time = -1;
 	best_paths = NULL;
@@ -105,15 +118,7 @@ t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths)
 			break ;
 		}
 		time = time_paths(paths, ants);
-		if (best_time == -1 || time < best_time)
-		{
-			if (best_paths != NULL)
-				paths_del(&best_paths);
-			best_time = time;
-			best_paths = paths;
-		}
-		else
-			paths_del(&paths);
+		x(&best_time, &best_paths, time, paths);
 		num_paths++;
 	}
 	return (best_paths);
