@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 21:12:40 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 18:57:29 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/09 13:31:43 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static int	backtrack(t_foo *args, int num_paths, int *timeout)
 		status = next_path(args->graph, new_path, args->used_nodes, timeout);
 		if (status == 0)
 		{
+			ft_arrlst_del(&new_path);
 			ft_arrlst_remove_last(args->paths, 1);
 			return (0);
 		}
@@ -106,6 +107,8 @@ t_arrlst	*find_best_paths(t_graph *graph, int ants, int max_paths)
 		time = time_paths(paths, ants);
 		if (best_time == -1 || time < best_time)
 		{
+			if (best_paths != NULL)
+				paths_del(&best_paths);
 			best_time = time;
 			best_paths = paths;
 		}

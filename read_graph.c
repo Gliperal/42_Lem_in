@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 13:56:53 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/08 15:31:57 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/09 13:37:20 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ t_graph		*read_graph(int fd)
 	free(rh.special[1]);
 	if (status || rh.graph->start == -1 || rh.graph->end == -1)
 	{
-		free(rh.graph);
+		graph_free(rh.graph);
 		return (NULL);
 	}
 	return (rh.graph);
