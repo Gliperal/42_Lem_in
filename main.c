@@ -6,7 +6,7 @@
 /*   By: nwhitlow <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 12:53:41 by nwhitlow          #+#    #+#             */
-/*   Updated: 2019/06/09 14:47:08 by nwhitlow         ###   ########.fr       */
+/*   Updated: 2019/06/09 18:24:50 by nwhitlow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int			main(void)
 		exit_status = 1;
 	else
 	{
+		ft_printf("%d\n", num_ants);
 		graph = read_graph(0);
 		if (!graph)
 			exit_status = 1;
